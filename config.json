@@ -1,0 +1,17 @@
+{
+    "baseurl": "http://blog.0xfb.me/",
+    "theme": "Fábio's ramblings",
+    "publishdir": "docs",
+    "theme": "lanyon-hugo",
+    "canonifyurls": true,
+    "permalinks": {
+        "post": ":year/:month/:day/:title/",
+        "fixed": ":title/"
+    },
+    "pygmentsuseclasses": true,
+    "params": {
+        "Title": "Fábio Bertinatto",
+        "Author": "fjb",
+        "DateForm": "Jan 2, 2006"
+    }
+}
