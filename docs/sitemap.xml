@@ -3,38 +3,38 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://blog.0xfb.me/about/</loc>
+    <loc>https://blog.0xfb.me/about/</loc>
   </url>
   
   <url>
-    <loc>http://blog.0xfb.me/2017/06/25/hello/</loc>
+    <loc>https://blog.0xfb.me/2017/06/25/hello/</loc>
     <lastmod>2017-06-25T10:04:45-03:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.0xfb.me/categories/</loc>
+    <loc>https://blog.0xfb.me/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://blog.0xfb.me/fixed/</loc>
+    <loc>https://blog.0xfb.me/fixed/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://blog.0xfb.me/</loc>
-    <lastmod>2017-06-25T10:04:45-03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.0xfb.me/post/</loc>
+    <loc>https://blog.0xfb.me/</loc>
     <lastmod>2017-06-25T10:04:45-03:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://blog.0xfb.me/tags/</loc>
+    <loc>https://blog.0xfb.me/post/</loc>
+    <lastmod>2017-06-25T10:04:45-03:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.0xfb.me/tags/</loc>
     <priority>0</priority>
   </url>
   

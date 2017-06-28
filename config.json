@@ -1,5 +1,5 @@
 {
-    "baseurl": "http://blog.0xfb.me/",
+    "baseurl": "https://blog.0xfb.me/",
     "theme": "Fábio's ramblings",
     "publishdir": "docs",
     "theme": "lanyon-hugo",

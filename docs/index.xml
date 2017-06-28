@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Fábio Bertinatto </title>
-    <link>http://blog.0xfb.me/</link>
+    <link>https://blog.0xfb.me/</link>
     <language>en-us</language>
     <author>fjb</author>
     <rights>(C) 2017</rights>
@@ -14,10 +14,10 @@
       
         <item>
           <title>Hello</title>
-          <link>http://blog.0xfb.me/2017/06/25/hello/</link>
+          <link>https://blog.0xfb.me/2017/06/25/hello/</link>
           <pubDate>Sun, 25 Jun 2017 10:04:45 -03</pubDate>
           <author>fjb</author>
-          <guid>http://blog.0xfb.me/2017/06/25/hello/</guid>
+          <guid>https://blog.0xfb.me/2017/06/25/hello/</guid>
           <description>&lt;p&gt;&amp;hellip; world!&lt;/p&gt;
 </description>
         </item>
