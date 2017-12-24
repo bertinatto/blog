@@ -11,6 +11,11 @@
   </url>
   
   <url>
+    <loc>https://blog.0xfb.me/2017/12/24/reflections-on-2017/</loc>
+    <lastmod>2017-12-24T11:04:52+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.0xfb.me/2017/06/25/hello/</loc>
     <lastmod>2017-06-25T10:04:45-03:00</lastmod>
   </url>
@@ -27,13 +32,13 @@
   
   <url>
     <loc>https://blog.0xfb.me/</loc>
-    <lastmod>2017-06-25T10:04:45-03:00</lastmod>
+    <lastmod>2017-12-24T11:04:52+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://blog.0xfb.me/post/</loc>
-    <lastmod>2017-06-25T10:04:45-03:00</lastmod>
+    <lastmod>2017-12-24T11:04:52+01:00</lastmod>
     <priority>0</priority>
   </url>
   
