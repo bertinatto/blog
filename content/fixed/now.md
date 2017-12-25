@@ -13,7 +13,7 @@ When home, I am:
 
 * Looking for a new flat.
 * Reading **The Great Gatsby** (in Portuguese).
-* Working on my software engineeting skills.
+* Working on my software engineeting skills, more specifically getting down to the nuts and bolts of containers.
 
 When outside, I am:
 
