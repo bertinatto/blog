@@ -8,7 +8,7 @@
         "post": ":year/:month/:day/:title/",
         "fixed": ":title/"
     },
-    "pygmentsuseclasses": true,
+    "pygmentsuseclasses": false,
     "params": {
         "Title": "Fábio Bertinatto",
         "Author": "fjb",

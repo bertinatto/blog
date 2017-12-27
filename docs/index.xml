@@ -6,11 +6,110 @@
     <language>en-us</language>
     <author>fjb</author>
     <rights>(C) 2017</rights>
-    <updated>2017-12-24 11:04:52 &#43;0100 CET</updated>
+    <updated>2017-12-27 09:06:40 &#43;0100 CET</updated>
 
     
       
     
+      
+    
+      
+        <item>
+          <title>Fork-like behaviour in Go</title>
+          <link>https://blog.0xfb.me/2017/12/27/fork-like-behaviour-in-go/</link>
+          <pubDate>Wed, 27 Dec 2017 09:06:40 CET</pubDate>
+          <author>fjb</author>
+          <guid>https://blog.0xfb.me/2017/12/27/fork-like-behaviour-in-go/</guid>
+          <description>
+
+&lt;p&gt;Recently, I have been looking into how to implement Linux Namespaces in Go.&lt;/p&gt;
+
+&lt;p&gt;In C, the way we isolate a process in certain Namespaces is by specifying them in the &lt;code&gt;tags&lt;/code&gt; parameter of &lt;code&gt;clone(2)&lt;/code&gt;. For instance, &lt;code&gt;user_namespaces(7)&lt;/code&gt; provides the following example to illustrate this.&lt;/p&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;(...)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ((opt &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; getopt(argc, argv, &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;+imnpuUM:G:zv&amp;#34;&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;switch&lt;/span&gt; (opt) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;i&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; flags &lt;span style=&#34;color:#f92672&#34;&gt;|=&lt;/span&gt; CLONE_NEWIPC;        &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;m&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; flags &lt;span style=&#34;color:#f92672&#34;&gt;|=&lt;/span&gt; CLONE_NEWNS;         &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;n&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; flags &lt;span style=&#34;color:#f92672&#34;&gt;|=&lt;/span&gt; CLONE_NEWNET;        &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;p&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; flags &lt;span style=&#34;color:#f92672&#34;&gt;|=&lt;/span&gt; CLONE_NEWPID;        &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;u&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; flags &lt;span style=&#34;color:#f92672&#34;&gt;|=&lt;/span&gt; CLONE_NEWUTS;        &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;v&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; verbose &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;                  &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;z&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; map_zero &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;                 &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;M&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; uid_map &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; optarg;             &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;G&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; gid_map &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; optarg;             &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;U&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; flags &lt;span style=&#34;color:#f92672&#34;&gt;|=&lt;/span&gt; CLONE_NEWUSER;       &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;  usage(argv[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]);
+        }
+    }
+
+(...)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/* Create the child in new namespace(s) */&lt;/span&gt;
+
+child_pid &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; clone(childFunc, child_stack &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; STACK_SIZE,
+                 flags &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; SIGCHLD, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;args);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (child_pid &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+   errExit(&lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;clone&amp;#34;&lt;/span&gt;);
+
+(...)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&#34;the-problem&#34;&gt;The problem&lt;/h2&gt;
+
+&lt;p&gt;Everything looks well and good, so I wanted to do the same in Go. However, I soon found out that &lt;code&gt;fork(2)&lt;/code&gt; (i.e., &lt;code&gt;clone(2)&lt;/code&gt;) isn&amp;rsquo;t the right way to do so. The problem lies on the fact that &lt;code&gt;fork(2)&lt;/code&gt; creates the new child by copying &lt;strong&gt;only&lt;/strong&gt; the main thread of execution. Even if a Go program is single-threaded, under the hood there might be many other threads executing in the Go runtime. As a result, &lt;code&gt;fork(2)&lt;/code&gt; isn&amp;rsquo;t really a nice way of creating a child process in Go.&lt;/p&gt;
+
+&lt;h2 id=&#34;possible-workarounds&#34;&gt;Possible workarounds&lt;/h2&gt;
+
+&lt;p&gt;The first solution that comes to mind is to use the &lt;code&gt;os/exec&lt;/code&gt; package. Plus, with this package it&amp;rsquo;s possible to define the Namespaces of the child process by setting the attributes of the command:&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;exec&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ls&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-l&amp;#34;&lt;/span&gt;)
+&lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;SysProcAttr&lt;/span&gt; = &lt;span style=&#34;color:#a6e22e&#34;&gt;syscall&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;SysProcAttr&lt;/span&gt;{
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Cloneflats&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;syscall&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;CLONE_NEWIPC&lt;/span&gt;,
+}
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Run&lt;/span&gt;(); &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
+    (&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/p&gt;
+
+&lt;p&gt;Everything looks great, but if a process call itself, wouldn&amp;rsquo;t the resulting process call itself again? Wouldn&amp;rsquo;t I get into an infinite loop?&lt;/p&gt;
+
+&lt;p&gt;When I came accross this problem I promply split my program into two: a parent and a child. The former would simply call the latter with the appropriate flags set.  However, for practical reasons, I wanted to have all my code in a single program, so I started looking for alternatives.&lt;/p&gt;
+
+&lt;p&gt;Another possible solution would have been to have different arguments in the command to alternate between parent and child. For example, when executed, &lt;code&gt;program&lt;/code&gt; would start in parent mode and then it would call itself by doing &lt;code&gt;program child&lt;/code&gt;. That sounded a bit sloppy for me, though. For exampmle, what if the user call &lt;code&gt;program child&lt;/code&gt; directly?&lt;/p&gt;
+
+&lt;h2 id=&#34;my-choice&#34;&gt;My choice&lt;/h2&gt;
+
+&lt;p&gt;I wondered how &lt;a href=&#34;https://github.com/moby/moby&#34;&gt;Moby&lt;/a&gt; addresses this issue, so looking at its codebase I found the &lt;code&gt;reexec&lt;/code&gt; package that does exactly what I wanted.&lt;/p&gt;
+
+&lt;p&gt;The solution is very interesting. First, to call itself a process could simple execute &lt;code&gt;/proc/self/exe&lt;/code&gt;, which is a in-memory representation of the process. Because of that, it&amp;rsquo;s OK to overwrite the command&amp;rsquo;s arguments, including &lt;code&gt;os.Args[0]&lt;/code&gt;. No harm will be made, as the executable is not read from the disk.&lt;/p&gt;
+
+&lt;p&gt;With that in mind, it&amp;rsquo;s possible to re-execute a Go program by doing:&lt;/p&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;exec&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Cmd&lt;/span&gt;{
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Path&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/proc/self/exe&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Args&lt;/span&gt;: []&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;{&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;child&amp;#34;&lt;/span&gt;},
+    (&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;)
+}
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;c&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Run&lt;/span&gt;(); &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nil&lt;/span&gt; {
+    (&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;)
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And in &lt;code&gt;main()&lt;/code&gt; we can check if the program running was re-executed by doing someting like this:&lt;/p&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;switch&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;os&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Args&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;parent&amp;#34;&lt;/span&gt;:
+        (&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;child&amp;#34;&lt;/span&gt;:
+        (&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;)
+     }&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Yes, that&amp;rsquo;s right! We overwrote &lt;code&gt;os.Args[0]&lt;/code&gt;!&lt;/p&gt;
+
+&lt;p&gt;Again, this was only possible because we are executing &lt;code&gt;/proc/self/exe&lt;/code&gt; instead of loading the executable from disk again. The kernel already has open file descriptors for all running processes, so the child process will be based on the in-memory representation of the parent. The executable could even be removed from the disk and the child would still be executed.&lt;/p&gt;
+
+&lt;p&gt;This still smells like a hack, but I found it to be a nice way to re-execute a process in Go.&lt;/p&gt;
+</description>
+        </item>
       
     
       
