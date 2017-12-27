@@ -167,7 +167,7 @@ child_pid <span style="color:#f92672">=</span> clone(childFunc, child_stack <spa
 
 <p>I wondered how <a href="https://github.com/moby/moby">Moby</a> addresses this issue, so looking at its codebase I found the <code>reexec</code> package that does exactly what I wanted.</p>
 
-<p>The solution is very interesting. First, to call itself a process could simple execute <code>/proc/self/exe</code>, which is a in-memory representation of the process. Because of that, it&rsquo;s OK to overwrite the command&rsquo;s arguments, including <code>os.Args[0]</code>. No harm will be made, as the executable is not read from the disk.</p>
+<p>The solution used by this package is very interesting. First, to call itself a process could simply execute <code>/proc/self/exe</code>, which, according to <code>proc(5)</code>, is a symbolic link to the actual executed command. Then, we could ovewrite the command&rsquo;s argument <code>os.Args[0]</code> in order to signal the resulting process that it&rsquo;s a child.</p>
 
 <p>With that in mind, it&rsquo;s possible to re-execute a Go program by doing:</p>
 
@@ -191,8 +191,6 @@ child_pid <span style="color:#f92672">=</span> clone(childFunc, child_stack <spa
      }</code></pre></div>
 
 <p>Yes, that&rsquo;s right! We overwrote <code>os.Args[0]</code>!</p>
-
-<p>Again, this was only possible because we are executing <code>/proc/self/exe</code> instead of loading the executable from disk again. The kernel already has open file descriptors for all running processes, so the child process will be based on the in-memory representation of the parent. The executable could even be removed from the disk and the child would still be executed.</p>
 
 <p>This still smells like a hack, but I found it to be a nice way to re-execute a process in Go.</p>
 

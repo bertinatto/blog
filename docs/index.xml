@@ -80,7 +80,7 @@ child_pid &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; clone(childFu
 
 &lt;p&gt;I wondered how &lt;a href=&#34;https://github.com/moby/moby&#34;&gt;Moby&lt;/a&gt; addresses this issue, so looking at its codebase I found the &lt;code&gt;reexec&lt;/code&gt; package that does exactly what I wanted.&lt;/p&gt;
 
-&lt;p&gt;The solution is very interesting. First, to call itself a process could simple execute &lt;code&gt;/proc/self/exe&lt;/code&gt;, which is a in-memory representation of the process. Because of that, it&amp;rsquo;s OK to overwrite the command&amp;rsquo;s arguments, including &lt;code&gt;os.Args[0]&lt;/code&gt;. No harm will be made, as the executable is not read from the disk.&lt;/p&gt;
+&lt;p&gt;The solution used by this package is very interesting. First, to call itself a process could simply execute &lt;code&gt;/proc/self/exe&lt;/code&gt;, which, according to &lt;code&gt;proc(5)&lt;/code&gt;, is a symbolic link to the actual executed command. Then, we could ovewrite the command&amp;rsquo;s argument &lt;code&gt;os.Args[0]&lt;/code&gt; in order to signal the resulting process that it&amp;rsquo;s a child.&lt;/p&gt;
 
 &lt;p&gt;With that in mind, it&amp;rsquo;s possible to re-execute a Go program by doing:&lt;/p&gt;
 
@@ -104,8 +104,6 @@ child_pid &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; clone(childFu
      }&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Yes, that&amp;rsquo;s right! We overwrote &lt;code&gt;os.Args[0]&lt;/code&gt;!&lt;/p&gt;
-
-&lt;p&gt;Again, this was only possible because we are executing &lt;code&gt;/proc/self/exe&lt;/code&gt; instead of loading the executable from disk again. The kernel already has open file descriptors for all running processes, so the child process will be based on the in-memory representation of the parent. The executable could even be removed from the disk and the child would still be executed.&lt;/p&gt;
 
 &lt;p&gt;This still smells like a hack, but I found it to be a nice way to re-execute a process in Go.&lt;/p&gt;
 </description>

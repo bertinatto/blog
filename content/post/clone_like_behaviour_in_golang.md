@@ -66,7 +66,7 @@ Another possible solution would have been to have different arguments in the com
 
 I wondered how [Moby](https://github.com/moby/moby) addresses this issue, so looking at its codebase I found the `reexec` package that does exactly what I wanted.
 
-The solution is very interesting. First, to call itself a process could simple execute `/proc/self/exe`, which is a in-memory representation of the process. Because of that, it's OK to overwrite the command's arguments, including `os.Args[0]`. No harm will be made, as the executable is not read from the disk.
+The solution used by this package is very interesting. First, to call itself a process could simply execute `/proc/self/exe`, which, according to `proc(5)`, is a symbolic link to the actual executed command. Then, we could ovewrite the command's argument `os.Args[0]` in order to signal the resulting process that it's a child.
 
 With that in mind, it's possible to re-execute a Go program by doing:
 
@@ -94,7 +94,5 @@ func main() {
 {{< /highlight >}}
 
 Yes, that's right! We overwrote `os.Args[0]`!
-
-Again, this was only possible because we are executing `/proc/self/exe` instead of loading the executable from disk again. The kernel already has open file descriptors for all running processes, so the child process will be based on the in-memory representation of the parent. The executable could even be removed from the disk and the child would still be executed.
 
 This still smells like a hack, but I found it to be a nice way to re-execute a process in Go.
