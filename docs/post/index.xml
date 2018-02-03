@@ -5,9 +5,42 @@
     <link>https://blog.0xfb.me/post/</link>
     <language>en-us</language>
     <author>fjb</author>
-    <rights>(C) 2017</rights>
-    <updated>2017-12-27 09:06:40 &#43;0100 CET</updated>
+    <rights>(C) 2018</rights>
+    <updated>2018-02-03 20:26:18 &#43;0100 CET</updated>
 
+    
+      
+        <item>
+          <title>Building a Latex resume and not worrying about compiling it</title>
+          <link>https://blog.0xfb.me/2018/02/03/building-a-latex-resume-and-not-worrying-about-compiling-it/</link>
+          <pubDate>Sat, 03 Feb 2018 20:26:18 CET</pubDate>
+          <author>fjb</author>
+          <guid>https://blog.0xfb.me/2018/02/03/building-a-latex-resume-and-not-worrying-about-compiling-it/</guid>
+          <description>&lt;p&gt;A long time ago I came accross Adrian Friggeri&amp;rsquo;s resume built with Latex. I couldn&amp;rsquo;t find the original template, but did found &lt;a href=&#34;https://www.latextemplates.com/template/friggeri-resume-cv&#34;&gt;this page&lt;/a&gt; with a customization.&lt;/p&gt;
+
+&lt;p&gt;I found that template amazing and I decided I wanted my resume to be like that. I was looking for a new job, so why not?  That being said, I spent hours and hours on it; I installed uncountable dependencies, made some Helvetica fonts work on my Linux box, created the perfect descriptions for my previous positions, adjusted the alignments with so much care. Phew, I finally managed to have my fancy curriculum!&lt;/p&gt;
+
+&lt;p&gt;Eventually I got a new job and forgot about it, until I decided to update it. At that point I had a clean OS installation, so I&amp;rsquo;d have to install all those dependencies again. As a result, I decided to ditch that resume and build a simpler one, based on the well-known &lt;a href=&#34;https://www.ctan.org/pkg/moderncv&#34;&gt;moderncv&lt;/a&gt; template. This one was simpler to compile as it required fewer dependencies so I thought my problem was soved.&lt;/p&gt;
+
+&lt;p&gt;However, recently I decided to update it, and guess what? For some reason it didn&amp;rsquo;t compile. Then I realized that the building process of my resume would be a great candidate to be containerized. To make things better, I found out that there is a &lt;code&gt;moderncv&lt;/code&gt; package available in Fedora 27. So I quickly put together this simple Dockerfile in my resume directory:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;FROM fedora-minimal:27
+
+VOLUME /data
+
+WORKDIR /data
+
+RUN microdnf update &amp;amp;&amp;amp; \
+    microdnf install texlive texlive-xetex texlive-moderncv &amp;amp;&amp;amp; \
+    microdnf clean all
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Voilà! Build the image, push it to Docker Hub and you will never have install &lt;code&gt;texlive&lt;/code&gt; and its dependencies only to compile your resume again.&lt;/p&gt;
+
+&lt;p&gt;If you are interested you can check my &lt;a href=&#34;https://github.com/bertinatto/resume&#34;&gt;GitHub repository&lt;/a&gt; for a complete example.&lt;/p&gt;
+</description>
+        </item>
+      
     
       
         <item>

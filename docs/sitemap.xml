@@ -11,6 +11,11 @@
   </url>
   
   <url>
+    <loc>https://blog.0xfb.me/2018/02/03/building-a-latex-resume-and-not-worrying-about-compiling-it/</loc>
+    <lastmod>2018-02-03T20:26:18+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.0xfb.me/2017/12/27/fork-like-behaviour-in-go/</loc>
     <lastmod>2017-12-27T09:06:40+01:00</lastmod>
   </url>
@@ -37,13 +42,13 @@
   
   <url>
     <loc>https://blog.0xfb.me/</loc>
-    <lastmod>2017-12-27T09:06:40+01:00</lastmod>
+    <lastmod>2018-02-03T20:26:18+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://blog.0xfb.me/post/</loc>
-    <lastmod>2017-12-27T09:06:40+01:00</lastmod>
+    <lastmod>2018-02-03T20:26:18+01:00</lastmod>
     <priority>0</priority>
   </url>
   
