@@ -7,17 +7,6 @@ draft: false
 
 This page is inspired by Derek Sivers' [/now](http://sivers.org/nowff) page movement.
 
-I'm working and living in Brno, Czech Republic.
+I'm living and working in Brno, Czech Republic. In my free time I'm trying to get better at Linux containers.
 
-When home, I am:
-
-* Looking for a new flat.
-* Reading **The Great Gatsby** (in Portuguese).
-* Working on my software engineeting skills, more specifically getting down to the nuts and bolts of containers.
-
-When outside, I am:
-
-* At the gym, deadlifting 130 kilos and squatting 125 kilos.
-* Ice skating with Camila.
-
-This page was last updated on December 24th, 2017.
+This page was last updated on February 10th, 2018.
