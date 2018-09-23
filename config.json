@@ -1,5 +1,5 @@
 {
-    "baseurl": "https://blog.0xfb.me/",
+    "baseurl": "https://bertinatto.github.io",
     "theme": "Fábio's ramblings",
     "publishdir": "docs",
     "theme": "lanyon-hugo",
@@ -12,7 +12,7 @@
     "googleAnalytics": "",
     "params": {
         "Title": "Fábio Bertinatto",
-        "Author": "fjb",
+        "Author": "bertinatto",
         "DateForm": "Jan 2, 2006"
     }
 }
