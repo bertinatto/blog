@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 
   <head>
-	<meta name="generator" content="Hugo 0.31" />
+	<meta name="generator" content="Hugo 0.52-DEV" />
   <link href="http://gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
@@ -11,7 +11,7 @@
 
   <title>
     
-      Fábio Bertinatto &middot; 
+      Fábio&#39;s notes &middot; 
     
   </title>
 
@@ -27,9 +27,6 @@
 
   
   <link rel="alternate" type="application/rss+xml" title="RSS" href="https://bertinatto.github.io/atom.xml">
-
-  
-  
 </head>
 
 
@@ -74,9 +71,6 @@
       
     
 
-    
-    
-    
   </nav>
 
   <div class="sidebar-item">
@@ -90,8 +84,7 @@
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            
-            <a title="Home">Fábio Bertinatto</a>
+            <a href="https://bertinatto.github.io/" title="Home">Fábio&#39;s notes</a>
             <small></small>
           </h3>
         </div>
@@ -144,18 +137,18 @@ RUN microdnf update &amp;&amp; \
 
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">(...)
 
-<span style="color:#66d9ef">while</span> ((opt <span style="color:#f92672">=</span> getopt(argc, argv, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;+imnpuUM:G:zv&#34;</span>)) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {
+<span style="color:#66d9ef">while</span> ((opt <span style="color:#f92672">=</span> getopt(argc, argv, <span style="color:#e6db74">&#34;+imnpuUM:G:zv&#34;</span>)) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {
         <span style="color:#66d9ef">switch</span> (opt) {
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;i&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWIPC;        <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;m&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWNS;         <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;n&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWNET;        <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;p&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWPID;        <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;u&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWUTS;        <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;v&#39;</span><span style="color:#f92672">:</span> verbose <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;                  <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;z&#39;</span><span style="color:#f92672">:</span> map_zero <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;                 <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;M&#39;</span><span style="color:#f92672">:</span> uid_map <span style="color:#f92672">=</span> optarg;             <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;G&#39;</span><span style="color:#f92672">:</span> gid_map <span style="color:#f92672">=</span> optarg;             <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;U&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWUSER;       <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;i&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWIPC;        <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;m&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWNS;         <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;n&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWNET;        <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;p&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWPID;        <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;u&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWUTS;        <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;v&#39;</span><span style="color:#f92672">:</span> verbose <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;                  <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;z&#39;</span><span style="color:#f92672">:</span> map_zero <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;                 <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;M&#39;</span><span style="color:#f92672">:</span> uid_map <span style="color:#f92672">=</span> optarg;             <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;G&#39;</span><span style="color:#f92672">:</span> gid_map <span style="color:#f92672">=</span> optarg;             <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;U&#39;</span><span style="color:#f92672">:</span> flags <span style="color:#f92672">|=</span> CLONE_NEWUSER;       <span style="color:#66d9ef">break</span>;
         <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>  usage(argv[<span style="color:#ae81ff">0</span>]);
         }
     }
@@ -167,7 +160,7 @@ RUN microdnf update &amp;&amp; \
 child_pid <span style="color:#f92672">=</span> clone(childFunc, child_stack <span style="color:#f92672">+</span> STACK_SIZE,
                  flags <span style="color:#f92672">|</span> SIGCHLD, <span style="color:#f92672">&amp;</span>args);
 <span style="color:#66d9ef">if</span> (child_pid <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
-   errExit(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;clone&#34;</span>);
+   errExit(<span style="color:#e6db74">&#34;clone&#34;</span>);
 
 (...)</code></pre></div>
 
@@ -179,12 +172,12 @@ child_pid <span style="color:#f92672">=</span> clone(childFunc, child_stack <spa
 
 <p>The first solution that comes to mind is to use the <code>os/exec</code> package. Plus, with this package it&rsquo;s possible to define the Namespaces of the child process by setting the attributes of the command:</p>
 
-<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">c</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">exec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#e6db74">&#34;ls&#34;</span>, <span style="color:#e6db74">&#34;-l&#34;</span>)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">c</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">exec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#e6db74">&#34;ls&#34;</span>, <span style="color:#e6db74">&#34;-l&#34;</span>)
 <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">SysProcAttr</span> = <span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">SysProcAttr</span>{
     <span style="color:#a6e22e">Cloneflats</span>: <span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">CLONE_NEWIPC</span>,
 }
 <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Run</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-    (<span style="color:#f92672">...</span>)</code></pre></div></p>
+    (<span style="color:#f92672">...</span>)</code></pre></div>
 
 <p>Everything looks great, but if a process call itself, wouldn&rsquo;t the resulting process call itself again? Wouldn&rsquo;t I get into an infinite loop?</p>
 
@@ -289,7 +282,11 @@ child_pid <span style="color:#f92672">=</span> clone(childFunc, child_stack <spa
 
 <div class="pagination">
   
+  <span class="pagination-item older">Older</span>
+  
 
+  
+  <span class="pagination-item newer">Newer</span>
   
 </div>
 

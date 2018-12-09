@@ -1,17 +1,19 @@
 {
-    "baseurl": "https://bertinatto.github.io",
-    "theme": "Fábio's ramblings",
-    "publishdir": "docs",
     "theme": "lanyon-hugo",
+    "contentdir": "content",
+    "layoutdir": "layouts",
+    "publishdir": "docs",
+    "builddrafts": false,
+    "baseurl": "https://bertinatto.github.io",
     "canonifyurls": true,
     "permalinks": {
         "post": ":year/:month/:day/:title/",
         "fixed": ":title/"
     },
     "pygmentsuseclasses": false,
-    "googleAnalytics": "",
     "params": {
-        "Title": "Fábio Bertinatto",
+        "Title": "Fábio's notes",
+        "Tagline": "",
         "Author": "bertinatto",
         "DateForm": "Jan 2, 2006"
     }
