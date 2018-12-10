@@ -4,7 +4,7 @@
     "layoutdir": "layouts",
     "publishdir": "docs",
     "builddrafts": false,
-    "baseurl": "https://bertinatto.github.io/blog",
+    "baseurl": "https://bertinatto.github.io",
     "canonifyurls": true,
     "permalinks": {
         "post": ":year/:month/:day/:title/",
