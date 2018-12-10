@@ -2,7 +2,6 @@
     "theme": "lanyon-hugo",
     "contentdir": "content",
     "layoutdir": "layouts",
-    "publishdir": "docs",
     "builddrafts": false,
     "baseurl": "https://bertinatto.github.io",
     "canonifyurls": true,
