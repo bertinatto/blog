@@ -5,7 +5,7 @@
     "publishdir": "docs",
     "builddrafts": false,
     "baseurl": "https://bertinatto.github.io/blog",
-    "canonifyurls": false,
+    "canonifyurls": true,
     "permalinks": {
         "post": ":year/:month/:day/:title/",
         "fixed": ":title/"
