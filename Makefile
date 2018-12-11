@@ -4,7 +4,7 @@ clean:
 	@mkdir public
 
 .PHONY: build
-build: clean
+build:
 	@hugo
 
 .PHONY: deploy
