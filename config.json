@@ -4,7 +4,7 @@
     "layoutdir": "layouts",
     "publishdir": "public",
     "builddrafts": false,
-    "baseurl": "https://bertinatto.github.io/blog",
+    "baseurl": "https://bertinatto.github.io",
     "canonifyurls": true,
     "permalinks": {
         "post": ":year/:month/:day/:title/",
@@ -15,6 +15,6 @@
         "Title": "Fábio's notes",
         "Tagline": "",
         "Author": "bertinatto",
-        "DateForm": "Jan 2, 2006"
+        "DateForm": "Jan 02, 2006"
     }
 }
