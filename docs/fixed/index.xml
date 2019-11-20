@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fixeds on </title>
+    <link>https://blog.bertinatto.org/fixed/</link>
+    <description>Recent content in Fixeds on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="https://blog.bertinatto.org/fixed/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Now</title>
+      <link>https://blog.bertinatto.org/now/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.bertinatto.org/now/</guid>
+      <description>This page is inspired by Derek Sivers&amp;rsquo; /now page movement.
+I live and work in Brno, Czech Republic.
+I split my free time between reading &amp;ldquo;12 Rules for Life&amp;rdquo; from Jordan Peterson and studying Kubernetes source base.
+This page was last updated on December 11th, 2018.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://blog.bertinatto.org/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.bertinatto.org/about/</guid>
+      <description>My name is Fábio and I am a programmer. This blog is meant to be a log of things that I learned recently.</description>
+    </item>
+    
+  </channel>
+</rss>

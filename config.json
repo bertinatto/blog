@@ -2,9 +2,9 @@
     "theme": "lanyon-hugo",
     "contentdir": "content",
     "layoutdir": "layouts",
-    "publishdir": "public",
+    "publishdir": "docs",
     "builddrafts": false,
-    "baseurl": "https://bertinatto.github.io",
+    "baseurl": "https://blog.bertinatto.org",
     "canonifyurls": true,
     "permalinks": {
         "post": ":year/:month/:day/:title/",

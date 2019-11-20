@@ -1,7 +1,8 @@
 .PHONY: clean
 clean:
-	@rm -rf public
-	@mkdir public
+	@rm -rf docs
+	@mkdir docs
+	@echo "blog.bertinatto.org" >> docs/CNAME
 
 .PHONY: build
 build:
