@@ -5,10 +5,6 @@ weight: 1
 draft: false
 ---
 
-This page is inspired by Derek Sivers' [/now](http://sivers.org/nowff) page movement.
+I'm learning to play the guitar and reading "Factfulness" by Hans Rosling.
 
-I live and work in Brno, Czech Republic.
-
-I split my free time between reading "12 Rules for Life" from Jordan Peterson *and* studying Kubernetes source base.
-
-This page was last updated on December 11th, 2018.
+*This page was last updated on Nevember 20th, 2019.*
