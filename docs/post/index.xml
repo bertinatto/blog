@@ -5,10 +5,21 @@
     <link>https://blog.bertinatto.org/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 03 Feb 2018 20:26:18 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 22 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://blog.bertinatto.org/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes Volumes and Multiple Zones</title>
+      <link>https://blog.bertinatto.org/2019/11/22/kubernetes-volumes-and-multiple-zones/</link>
+      <pubDate>Fri, 22 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.bertinatto.org/2019/11/22/kubernetes-volumes-and-multiple-zones/</guid>
+      <description>While working on a recent patch for Kubernetes, I put down a few notes around how Kubernetes handles multiple zones from the storage perspective.
+This is not an extensive description of multi zone support in Kubernetes, but rather a specific explanation of how PersistentVolumes (PVs) are created in the correct zones.
+The labels It all starts with the kubelet adding labels to node objects with information about the zones and regions the node is placed.</description>
+    </item>
     
     <item>
       <title>Building a Latex resume and not worrying about compiling it</title>

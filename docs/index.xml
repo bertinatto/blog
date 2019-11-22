@@ -4,12 +4,87 @@
     <link>https://blog.bertinatto.org/</link>
     <language>en-us</language>
     <author>bertinatto</author>
-    <rights>(C) 2018</rights>
-    <updated>2018-02-03 20:26:18 &#43;0100 CET</updated>
+    <rights>(C) 2019</rights>
+    <updated>2019-11-22 00:00:00 &#43;0000 UTC</updated>
 
     
       
     
+      
+    
+      
+        <item>
+          <title>Kubernetes Volumes and Multiple Zones</title>
+          <link>https://blog.bertinatto.org/2019/11/22/kubernetes-volumes-and-multiple-zones/</link>
+          <pubDate>Fri, 22 Nov 2019 00:00:00 UTC</pubDate>
+          <author>bertinatto</author>
+          <guid>https://blog.bertinatto.org/2019/11/22/kubernetes-volumes-and-multiple-zones/</guid>
+          <description>
+
+&lt;p&gt;While working on a recent &lt;a href=&#34;https://github.com/kubernetes/kubernetes/pull/83394&#34;&gt;patch&lt;/a&gt; for Kubernetes, I put down a few notes around how Kubernetes handles multiple zones from the storage perspective.&lt;/p&gt;
+
+&lt;p&gt;This is not an extensive description of multi zone support in Kubernetes, but rather a specific explanation of how PersistentVolumes (PVs) are created in the correct zones.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-labels&#34;&gt;The labels&lt;/h2&gt;
+
+&lt;p&gt;It all starts with the kubelet adding labels to node objects with information about the zones and regions the node is placed.&lt;/p&gt;
+
+&lt;p&gt;This can be quickly verified with the command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl get node/ip-172-18-12-140.ec2.internal -o yaml
+apiVersion: v1
+kind: Node
+  labels:
+	failure-domain.beta.kubernetes.io/region: us-east-1
+	failure-domain.beta.kubernetes.io/zone: us-east-1d
+   (...)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In addition to that, the &lt;a href=&#34;https://github.com/kubernetes/kubernetes/blob/5bac42bff9bfb9dfe0f2ea40f1c80cac47fc12b2/plugin/pkg/admission/storage/persistentvolume/label/admission.go#L55-L65&#34;&gt;PersistentVolumeLabel Admission Controller&lt;/a&gt; automatically adds zone labels to PVs as soon as they are created.&lt;/p&gt;
+
+&lt;p&gt;The scheduler (via the &lt;a href=&#34;https://github.com/bertinatto/kubernetes/blob/5bac42bff9bfb9dfe0f2ea40f1c80cac47fc12b2/pkg/scheduler/algorithm/predicates/predicates.go#L609-L614&#34;&gt;VolumeZonePredicate&lt;/a&gt; predicate) will then ensure that pods that claim a given PV are only placed into the same zone as that volume, as volumes cannot be attached across zones.&lt;/p&gt;
+
+&lt;p&gt;This approach sounds interesting, but it comes with some problems. For instance, this only &lt;strong&gt;prevents&lt;/strong&gt; scheduling pods in certain zones. It can&amp;rsquo;t tell the storage provisioner to provion the PV in a certain zone.&lt;/p&gt;
+
+&lt;p&gt;There&amp;rsquo;s a better solution to address this shortcoming: topology-aware volume provisiong.&lt;/p&gt;
+
+&lt;h2 id=&#34;topology-aware-volume-provisioning&#34;&gt;Topology-aware volume provisioning&lt;/h2&gt;
+
+&lt;p&gt;With topology-aware volume provisioning, the PV is only provisioned when a pod requests it. When that happens, the volume is provisioned in the same zone as the pod.&lt;/p&gt;
+
+&lt;p&gt;The PV &lt;em&gt;NodeAffinity&lt;/em&gt; is always set in the storage plugin (or in the external provisioner, in the CSI case). Then, there&amp;rsquo;s another scheduler predicate that schedules pods on certain nodes: &lt;a href=&#34;https://github.com/bertinatto/kubernetes/blob/5bac42bff9bfb9dfe0f2ea40f1c80cac47fc12b2/pkg/scheduler/algorithm/predicates/predicates.go#L1571-L1573&#34;&gt;VolumeBindingChecker&lt;/a&gt;. This predicate looks at the &lt;em&gt;pv.spec.nodeaffinity&lt;/em&gt; field rather than at the PV labels.&lt;/p&gt;
+
+&lt;p&gt;This is how the field looks in the PV object:&lt;/p&gt;
+
+&lt;p&gt;In-tree storage plugin:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  nodeAffinity:
+	required:
+	  nodeSelectorTerms:
+	  - matchExpressions:
+		- key: failure-domain.beta.kubernetes.io/zone
+		  operator: In
+		  values:
+		  - us-east-1d
+		- key: failure-domain.beta.kubernetes.io/region
+		  operator: In
+		  values:
+		  - us-east-1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CSI driver:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  nodeAffinity:
+	required:
+	  nodeSelectorTerms:
+	  - matchExpressions:
+		- key: topology.ebs.csi.aws.com/zone
+		  operator: In
+		  values:
+		  - us-east-1d
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
       
     
       

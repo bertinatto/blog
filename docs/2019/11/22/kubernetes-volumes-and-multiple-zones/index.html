@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Kubernetes Volumes and Multiple Zones &middot; Fábio&#39;s notes
+    
+  </title>
+
+  
+  <link rel="stylesheet" href="https://blog.bertinatto.org/css/poole.css">
+  <link rel="stylesheet" href="https://blog.bertinatto.org/css/syntax.css">
+  <link rel="stylesheet" href="https://blog.bertinatto.org/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://blog.bertinatto.org/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="https://blog.bertinatto.org/assets/favicon.ico">
+
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="https://blog.bertinatto.org/atom.xml">
+</head>
+
+
+  <body>
+
+    
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+
+<div class="sidebar" id="sidebar">
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item " href="https://blog.bertinatto.org/">Home</a>
+    <a class="sidebar-nav-item " href="https://blog.bertinatto.org/post">Posts</a>
+
+    
+    
+      
+        <a class="sidebar-nav-item " href="https://blog.bertinatto.org/now/">Now</a>
+      
+    
+      
+        <a class="sidebar-nav-item " href="https://blog.bertinatto.org/about/">About</a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>&copy; 2019. All rights reserved.</p>
+  </div>
+</div>
+
+
+    
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="https://blog.bertinatto.org/" title="Home">Fábio&#39;s notes</a>
+            <small></small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+
+
+<div class="post">
+  <h1 class="post-title">Kubernetes Volumes and Multiple Zones</h1>
+  <span class="post-date">Nov 22, 2019</span>
+  
+
+<p>While working on a recent <a href="https://github.com/kubernetes/kubernetes/pull/83394">patch</a> for Kubernetes, I put down a few notes around how Kubernetes handles multiple zones from the storage perspective.</p>
+
+<p>This is not an extensive description of multi zone support in Kubernetes, but rather a specific explanation of how PersistentVolumes (PVs) are created in the correct zones.</p>
+
+<h2 id="the-labels">The labels</h2>
+
+<p>It all starts with the kubelet adding labels to node objects with information about the zones and regions the node is placed.</p>
+
+<p>This can be quickly verified with the command:</p>
+
+<pre><code>$ kubectl get node/ip-172-18-12-140.ec2.internal -o yaml
+apiVersion: v1
+kind: Node
+  labels:
+	failure-domain.beta.kubernetes.io/region: us-east-1
+	failure-domain.beta.kubernetes.io/zone: us-east-1d
+   (...)
+</code></pre>
+
+<p>In addition to that, the <a href="https://github.com/kubernetes/kubernetes/blob/5bac42bff9bfb9dfe0f2ea40f1c80cac47fc12b2/plugin/pkg/admission/storage/persistentvolume/label/admission.go#L55-L65">PersistentVolumeLabel Admission Controller</a> automatically adds zone labels to PVs as soon as they are created.</p>
+
+<p>The scheduler (via the <a href="https://github.com/bertinatto/kubernetes/blob/5bac42bff9bfb9dfe0f2ea40f1c80cac47fc12b2/pkg/scheduler/algorithm/predicates/predicates.go#L609-L614">VolumeZonePredicate</a> predicate) will then ensure that pods that claim a given PV are only placed into the same zone as that volume, as volumes cannot be attached across zones.</p>
+
+<p>This approach sounds interesting, but it comes with some problems. For instance, this only <strong>prevents</strong> scheduling pods in certain zones. It can&rsquo;t tell the storage provisioner to provion the PV in a certain zone.</p>
+
+<p>There&rsquo;s a better solution to address this shortcoming: topology-aware volume provisiong.</p>
+
+<h2 id="topology-aware-volume-provisioning">Topology-aware volume provisioning</h2>
+
+<p>With topology-aware volume provisioning, the PV is only provisioned when a pod requests it. When that happens, the volume is provisioned in the same zone as the pod.</p>
+
+<p>The PV <em>NodeAffinity</em> is always set in the storage plugin (or in the external provisioner, in the CSI case). Then, there&rsquo;s another scheduler predicate that schedules pods on certain nodes: <a href="https://github.com/bertinatto/kubernetes/blob/5bac42bff9bfb9dfe0f2ea40f1c80cac47fc12b2/pkg/scheduler/algorithm/predicates/predicates.go#L1571-L1573">VolumeBindingChecker</a>. This predicate looks at the <em>pv.spec.nodeaffinity</em> field rather than at the PV labels.</p>
+
+<p>This is how the field looks in the PV object:</p>
+
+<p>In-tree storage plugin:</p>
+
+<pre><code>  nodeAffinity:
+	required:
+	  nodeSelectorTerms:
+	  - matchExpressions:
+		- key: failure-domain.beta.kubernetes.io/zone
+		  operator: In
+		  values:
+		  - us-east-1d
+		- key: failure-domain.beta.kubernetes.io/region
+		  operator: In
+		  values:
+		  - us-east-1
+</code></pre>
+
+<p>CSI driver:</p>
+
+<pre><code>  nodeAffinity:
+	required:
+	  nodeSelectorTerms:
+	  - matchExpressions:
+		- key: topology.ebs.csi.aws.com/zone
+		  operator: In
+		  values:
+		  - us-east-1d
+</code></pre>
+
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+  </body>
+</html>
+
