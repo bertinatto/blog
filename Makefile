@@ -11,7 +11,5 @@ build:
 .PHONY: deploy
 deploy: build
 	@echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
-	@cd public/
-	@git add . && git commit -m "Rebuilding site"
+	@git add docs/ && git commit -m "Rebuilding site"
 	@git push origin master
-	@cd ..
